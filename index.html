@@ -37,11 +37,16 @@
         }
 
         #clock {
-            font-size: 10rem;
-            letter-spacing: 5px;
-            margin-bottom: 10px;
-            text-shadow: 2px 4px 10px rgba(0,0,0,0.3);
-        }
+			font-size: 13rem;
+			letter-spacing: 5px;
+			margin-bottom: 10px;
+			text-shadow: 2px 4px 10px rgba(0,0,0,0.3);
+	
+		    /* SOLUSI JAM BERGOYANG: */
+			font-variant-numeric: tabular-nums; /* Angka jadi berjarak tetap */
+			display: inline-block;
+			min-width: 1ch; /* Menjaga konsistensi jarak */
+		}
 
         #date {
             font-size: 2.5rem;
@@ -88,6 +93,7 @@
 </body>
 
 </html>
+
 
 
 
