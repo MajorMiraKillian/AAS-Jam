@@ -153,17 +153,17 @@
             document.getElementById('date').textContent = now.toLocaleDateString('id-ID', options);
 
             // --- LOGIKA PESAN/SUARA TERJADWAL ---
-            // Contoh 1: Jam 10:00 tepat (Ujian Selesai)
-            if (h === 09 && m === 0 && s === 0) {
-                tampilkanAlert("WAKTU UJIAN TELAH HABIS!", true);
-            }
-            // Contoh 2: Jam 08:45 (Peringatan 15 Menit)
-            else if (h === 8 && m === 45 && s === 0) {
+            // Contoh 1: Jam 08:45 (Peringatan 15 Menit)
+            if (h === 8 && m === 45 && s === 0) {
                 tampilkanAlert("SISA WAKTU 15 MENIT LAGI!", true);
             }
-            // Contoh 3: Jam 09:55 (Peringatan 5 Menit)
+            // Contoh 2: Jam 08:55 (Peringatan 5 Menit)
             else if (h === 8 && m === 55 && s === 0) {
                 tampilkanAlert("SISA WAKTU 5 MENIT! CEK KEMBALI JAWABAN ANDA!", true);
+            }
+            // Contoh 3: Jam 09:00 tepat (Ujian Selesai)
+            else if (h === 09 && m === 0 && s === 0) {
+                tampilkanAlert("WAKTU UJIAN TELAH HABIS!", true);
             }
         }
 
@@ -182,3 +182,4 @@
     </script>
 </body>
 </html>
+
