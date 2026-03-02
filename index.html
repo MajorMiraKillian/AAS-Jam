@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jam Realtime Modern</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700&display=swap" rel="stylesheet">
+    <title>Jam Ujian Pro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         
@@ -13,53 +13,100 @@
             height: 100vh;
             font-family: 'Montserrat', sans-serif;
             overflow: hidden;
+            background-color: #000;
         }
 
-        /* Sisi Kiri: Gambar */
         .image-section {
             flex: 1;
-            /* Kamu bisa ganti URL ini dengan foto pribadimu */
-            background: url('https://i.postimg.cc/Bv5Trzyr/Back-IFP-AAS.jpg auto=format&fit=crop&w=1000&q=80') no-repeat center center;
+            background: url('https://i.postimg.cc/Bv5Trzyr/Back-IFP-AAS.jpg') no-repeat center center;
             background-size: cover;
         }
 
-        /* Sisi Kanan: Jam & Tanggal */
         .clock-section {
             flex: 1;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
             background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             color: white;
+        }
+
+        .row-top {
+            flex: 0 0 25%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
             text-align: center;
-            box-shadow: -10px 0 20px rgba(0,0,0,0.2);
+        }
+
+        /* ANIMASI BERKEDIP */
+        .instruction {
+            color: #d60000; 
+            background: rgba(255, 255, 255, 0.95); 
+            font-size: 1.8rem; 
+            font-weight: 800;
+            line-height: 1.2;
+            padding: 20px 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border: 5px solid #d60000;
+            max-width: 95%;
+            text-transform: uppercase;
+            /* Aktifkan Animasi */
+            animation: blinker 1.5s linear infinite;
+        }
+
+        @keyframes blinker {
+            50% { opacity: 0.3; transform: scale(0.98); }
+        }
+
+        .row-middle {
+            flex: 0 0 55%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-top: 2px solid rgba(255,255,255,0.2);
+            border-bottom: 2px solid rgba(255,255,255,0.2);
+        }
+
+        .row-bottom {
+            flex: 0 0 20%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
         }
 
         #clock {
-			font-size: 11rem;
-			letter-spacing: 5px;
-			margin-bottom: 10px;
-			text-shadow: 2px 4px 10px rgba(0,0,0,0.3);
-	
-		    /* SOLUSI JAM BERGOYANG: */
-			font-variant-numeric: tabular-nums; /* Angka jadi berjarak tetap */
-			display: inline-block;
-			min-width: 1ch; /* Menjaga konsistensi jarak */
-		}
-
-        #date {
-            font-size: 2.5rem;
-            font-weight: 300;
-            opacity: 0.8;
-            letter-spacing: 2px;
+            font-size: 8.5rem;
+            letter-spacing: 5px;
+            font-variant-numeric: tabular-nums;
+            text-shadow: 2px 4px 10px rgba(0,0,0,0.3);
         }
 
-        /* Responsif untuk HP */
+        #date {
+            font-size: 2rem;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        /* STYLE PESAN DINAMIS DI BAWAH */
+        #dynamic-msg {
+            font-size: 1.5rem;
+            letter-spacing: 2px;
+            font-weight: bold;
+            color: #ffeb3b; /* Kuning cerah agar beda */
+            text-align: center;
+            transition: all 0.5s ease;
+        }
+
         @media (max-width: 768px) {
             body { flex-direction: column; }
-            .image-section { height: 40vh; }
+            .image-section { height: 25vh; }
+            .clock-section { height: 75vh; }
             #clock { font-size: 4rem; }
+            .instruction { font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -68,37 +115,70 @@
     <div class="image-section"></div>
     
     <div class="clock-section">
-        <div id="clock">00:00:00</div>
-        <div id="date">Memuat Tanggal...</div>
+        <div class="row-top">
+            <div class="instruction">
+                Pastikan<br> Nama, Nomor Ujian, Mata Pelajaran<br> dan TIPE SOAL untuk diisi (dihitamkan) <br> dengan BENAR/SEMPURNA!
+            </div>
+        </div>
+
+        <div class="row-middle">
+            <div id="clock">00:00:00</div>
+            <div id="date">Memuat Tanggal...</div>
+        </div>
+
+        <div class="row-bottom">
+            <div id="dynamic-msg">WAKTU INDONESIA BARAT</div>
+        </div>
     </div>
 
     <script>
+        // FUNGSI SUARA (Text-to-Speech)
+        function berikanSuara(teks) {
+            const pesan = new SpeechSynthesisUtterance(teks);
+            pesan.lang = 'id-ID';
+            pesan.rate = 0.9; // Kecepatan bicara
+            window.speechSynthesis.speak(pesan);
+        }
+
         function updateTime() {
             const now = new Date();
+            const h = now.getHours();
+            const m = now.getMinutes();
+            const s = now.getSeconds();
             
-            // Format Jam
-            const hours = String(now.getHours()).padStart(2, '0');
-            const minutes = String(now.getMinutes()).padStart(2, '0');
-            const seconds = String(now.getSeconds()).padStart(2, '0');
-            document.getElementById('clock').textContent = `${hours}:${minutes}:${seconds}`;
+            const timeStr = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+            document.getElementById('clock').textContent = timeStr;
 
-            // Format Tanggal (Bahasa Indonesia)
-            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
             document.getElementById('date').textContent = now.toLocaleDateString('id-ID', options);
+
+            // --- LOGIKA PESAN/SUARA TERJADWAL ---
+            // Contoh 1: Jam 10:00 tepat (Ujian Selesai)
+            if (h === 09 && m === 0 && s === 0) {
+                tampilkanAlert("WAKTU UJIAN TELAH HABIS!", true);
+            }
+            // Contoh 2: Jam 08:45 (Peringatan 15 Menit)
+            else if (h === 8 && m === 45 && s === 0) {
+                tampilkanAlert("SISA WAKTU 15 MENIT LAGI!", true);
+            }
+            // Contoh 3: Jam 09:55 (Peringatan 5 Menit)
+            else if (h === 8 && m === 55 && s === 0) {
+                tampilkanAlert("SISA WAKTU 5 MENIT! CEK KEMBALI JAWABAN ANDA!", true);
+            }
+        }
+
+        function tampilkanAlert(teks, pakeSuara) {
+            const target = document.getElementById('dynamic-msg');
+            target.textContent = teks;
+            target.style.color = "#ff3333"; // Berubah merah saat genting
+            
+            if (pakeSuara) {
+                berikanSuara(teks);
+            }
         }
 
         setInterval(updateTime, 1000);
         updateTime();
     </script>
 </body>
-
 </html>
-
-
-
-
-
-
-
-
-
