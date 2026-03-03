@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jam Ujian AAS - AKT</title>
+    <title>Jam AAS</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -154,7 +154,7 @@
             <div id="dynamic-msg">PRESTASI ITU PENTING, JUJUR YANG PALING UTAMA</div>
         </div>
 
-        <button class="test-audio-btn" onclick="berikanSuara('Tes audio sistem Jam Ujian berhasil.')">
+        <button class="test-audio-btn" onclick="berikanSuara('Sinkronisasi Sistem, berhasil')">
             🔈 TES AUDIO
         </button>
     </div>
@@ -197,19 +197,23 @@
             document.getElementById('date').textContent = now.toLocaleDateString('id-ID', options);
 
             // --- LOGIKA JADWAL SESUAI PERMINTAAN ---
-            
+                   
             // SESI PAGI (08:45 - 09:00)
-            if (h === 8 && m === 45 && s === 0) {
-                tampilkanAlert("SISA WAKTU 15 MENIT LAGI, SEMANGAT!", true);
+            if (h === 6 && m === 58 && s === 0) {
+                tampilkanAlert("ASESMEN AKHIR SEKOLAH SESI 1, AKAN SEGERA DIMULAI!", true);
+            }
+            else if (h === 8 && m === 45 && s === 0) {
+                tampilkanAlert("SISA WAKTU 15 MENIT LAGI", true);
             }
             else if (h === 8 && m === 55 && s === 0) {
                 tampilkanAlert("SISA WAKTU 5 MENIT! CEK KEMBALI JAWABAN KAMU!", true);
             }
             else if (h === 9 && m === 0 && s === 0) {
-                tampilkanAlert("WAKTU UJIAN TELAH HABIS!", true);
+                tampilkanAlert("WAKTU ASESMEN AKHIR SEKOLAH SESI 1, TELAH HABIS!", true);
             }
-            
             // SESI SIANG (11:45 - 12:00)
+            else if (h === 09 && m === 58 && s === 0) {
+                tampilkanAlert("ASESMEN AKHIR SEKOLAH SESI 2, AKAN SEGERA DIMULAI!", true);
             else if (h === 11 && m === 45 && s === 0) {
                 tampilkanAlert("SISA WAKTU 15 MENIT LAGI, SEMANGAT!", true);
             }
@@ -217,7 +221,7 @@
                 tampilkanAlert("SISA WAKTU 5 MENIT! CEK KEMBALI JAWABAN KAMU!", true);
             }
             else if (h === 12 && m === 0 && s === 0) {
-                tampilkanAlert("WAKTU UJIAN TELAH HABIS!", true);
+                tampilkanAlert("WAKTU ASESMEN AKHIR SEKOLAH SESI 2, TELAH HABIS!", true);
             }
         }
 
@@ -227,5 +231,6 @@
     </script>
 </body>
 </html>
+
 
 
