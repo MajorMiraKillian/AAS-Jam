@@ -141,7 +141,7 @@
     <div class="clock-section">
         <div class="row-top">
             <div class="instruction">
-                Pastikan<br> Nama, Nomor Ujian, Mata Pelajaran dan TIPE SOAL<br> untuk diisi (dihitamkan) dengan BENAR/SEMPURNA!
+                Pastikan<br> Nama, Nomor Ujian, Mata Pelajaran <BR>dan TIPE SOAL untuk diisi (dihitamkan) <BR>dengan BENAR/SEMPURNA!
             </div>
         </div>
 
@@ -200,10 +200,10 @@
             
             // SESI PAGI (08:45 - 09:00)
             if (h === 8 && m === 45 && s === 0) {
-                tampilkanAlert("SISA WAKTU 15 MENIT LAGI!", true);
+                tampilkanAlert("SISA WAKTU 15 MENIT LAGI, SEMANGAT!", true);
             }
             else if (h === 8 && m === 55 && s === 0) {
-                tampilkanAlert("SISA WAKTU 5 MENIT! CEK KEMBALI JAWABAN ANDA!", true);
+                tampilkanAlert("SISA WAKTU 5 MENIT! CEK KEMBALI JAWABAN KAMU!", true);
             }
             else if (h === 9 && m === 0 && s === 0) {
                 tampilkanAlert("WAKTU UJIAN TELAH HABIS!", true);
@@ -211,12 +211,12 @@
             
             // SESI SIANG (11:45 - 12:00)
             else if (h === 11 && m === 45 && s === 0) {
-                tampilkanAlert("SISA WAKTU 15 MENIT LAGI!", true);
+                tampilkanAlert("SISA WAKTU 15 MENIT LAGI, SEMANGAT!", true);
             }
             else if (h === 11 && m === 55 && s === 0) {
-                tampilkanAlert("SISA WAKTU 5 MENIT! CEK KEMBALI JAWABAN ANDA!", true);
+                tampilkanAlert("SISA WAKTU 5 MENIT! CEK KEMBALI JAWABAN KAMU!", true);
             }
-            else if (h === 12 && m === 40 && s === 0) {
+            else if (h === 12 && m === 0 && s === 0) {
                 tampilkanAlert("WAKTU UJIAN TELAH HABIS!", true);
             }
         }
@@ -227,3 +227,4 @@
     </script>
 </body>
 </html>
+
