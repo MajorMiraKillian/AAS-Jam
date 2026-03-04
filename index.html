@@ -1,161 +1,115 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jam AAS</title>
+    <title>AAS Clock - Official English Version</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { display: flex; height: 100vh; font-family: 'Montserrat', sans-serif; overflow: hidden; background-color: #000; }
+        .image-section { flex: 1; background: url('https://i.postimg.cc/FKmJ09T2/Back-IFP-AAS.jpg') no-repeat center center; background-size: cover; }
+        .clock-section { flex: 1; display: flex; flex-direction: column; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; position: relative; }
         
-        body {
-            display: flex;
-            height: 100vh;
-            font-family: 'Montserrat', sans-serif;
-            overflow: hidden;
-            background-color: #000;
-        }
+        .row-top { flex: 0 0 25%; display: flex; align-items: center; justify-content: center; padding: 15px; text-align: center; }
+        .instruction { color: #d60000; background: rgba(255, 255, 255, 0.95); font-size: 1.6rem; font-weight: 800; line-height: 1.3; padding: 20px 30px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.5); border: 5px solid #d60000; max-width: 95%; text-transform: uppercase; animation: blinker 1.5s linear infinite; }
+        
+        @keyframes blinker { 50% { opacity: 0.3; transform: scale(0.98); } }
+        
+        .row-middle { flex: 0 0 55%; display: flex; flex-direction: column; justify-content: center; align-items: center; border-top: 2px solid rgba(255,255,255,0.2); border-bottom: 2px solid rgba(255,255,255,0.2); }
+        #clock { font-size: 9.5rem; letter-spacing: 5px; font-variant-numeric: tabular-nums; text-shadow: 2px 4px 10px rgba(0,0,0,0.3); }
+        #date { font-size: 2.2rem; font-weight: 300; opacity: 0.9; }
+        
+        .row-bottom { flex: 0 0 20%; display: flex; align-items: center; justify-content: center; padding: 0 20px; }
+        #dynamic-msg { font-size: 1.5rem; letter-spacing: 2px; font-weight: 800; color: #ffffff; text-align: center; text-shadow: 0 2px 5px rgba(0,0,0,0.5); text-transform: uppercase; }
+        
+        .test-audio-btn { position: absolute; bottom: 20px; right: 20px; background: rgba(255, 255, 255, 0.2); border: 1px solid rgba(255, 255, 255, 0.4); color: white; padding: 10px 20px; border-radius: 30px; cursor: pointer; font-size: 0.8rem; font-weight: bold; z-index: 100; transition: 0.3s; }
+        .test-audio-btn:hover { background: rgba(255, 255, 255, 0.4); }
 
-        .image-section {
-            flex: 1;
-            background: url('https://i.postimg.cc/FKmJ09T2/Back-IFP-AAS.jpg') no-repeat center center;
-            background-size: cover;
-        }
-
-        .clock-section {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
-            color: white;
-            position: relative;
-        }
-
-        .row-top {
-            flex: 0 0 25%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 15px;
-            text-align: center;
-        }
-
-        .instruction {
-            color: #d60000; 
-            background: rgba(255, 255, 255, 0.95); 
-            font-size: 1.8rem; 
-            font-weight: 800;
-            line-height: 1.2;
-            padding: 20px 30px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            border: 5px solid #d60000;
-            max-width: 95%;
-            text-transform: uppercase;
-            animation: blinker 1.5s linear infinite;
-        }
-
-        @keyframes blinker {
-            50% { opacity: 0.3; transform: scale(0.98); }
-        }
-
-        .row-middle {
-            flex: 0 0 55%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            border-top: 2px solid rgba(255,255,255,0.2);
-            border-bottom: 2px solid rgba(255,255,255,0.2);
-        }
-
-        #clock {
-            font-size: 9.5rem;
-            letter-spacing: 5px;
-            font-variant-numeric: tabular-nums;
-            text-shadow: 2px 4px 10px rgba(0,0,0,0.3);
-        }
-
-        #date {
-            font-size: 2.2rem;
-            font-weight: 300;
-            opacity: 0.9;
-        }
-
-        .row-bottom {
-            flex: 0 0 20%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0 20px;
-        }
-
-        #dynamic-msg {
-            font-size: 1.6rem;
-            letter-spacing: 2px;
-            font-weight: 800;
-            color: #ffffff;
-            text-align: center;
-            text-shadow: 0 2px 5px rgba(0,0,0,0.5);
-            text-transform: uppercase;
-        }
-
-        .test-audio-btn {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.4);
-            color: white;
-            padding: 8px 15px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 0.7rem;
-            z-index: 100;
-        }
-
-        @media (max-width: 768px) {
-            #clock { font-size: 4rem; }
-            .instruction { font-size: 1rem; }
-            #dynamic-msg { font-size: 1.2rem; }
-        }
+        @media (max-width: 768px) { #clock { font-size: 4rem; } .instruction { font-size: 1rem; } #dynamic-msg { font-size: 1.2rem; } }
     </style>
 </head>
 <body>
 
     <div class="image-section"></div>
-    
     <div class="clock-section">
         <div class="row-top">
             <div class="instruction">
-                Pastikan<br> Nama, Nomor Ujian, Mata Pelajaran <BR>dan TIPE SOAL untuk diisi (dihitamkan) <BR>dengan BENAR/SEMPURNA!
+                PLEASE ENSURE: NAME, EXAM NUMBER,<br>
+				SUBJECT AND QUESTION TYPE ARE FILLED<br>
+                CORRECTLY AND PERFECTLY!
             </div>
         </div>
-
         <div class="row-middle">
             <div id="clock">00:00:00</div>
-            <div id="date">Memuat Tanggal...</div>
+            <div id="date">Loading Date...</div>
         </div>
-
         <div class="row-bottom">
-            <div id="dynamic-msg">PRESTASI ITU PENTING, JUJUR YANG PALING UTAMA</div>
+            <div id="dynamic-msg">ACHIEVEMENT IS IMPORTANT, HONESTY IS THE PRIORITY</div>
         </div>
-
-        <button class="test-audio-btn" onclick="berikanSuara('Tes Audio Berhasil')">
-            🔈 TES AUDIO
+        <button class="test-audio-btn" onclick="berikanSuara('The audio system is functioning correctly. Please prepare for your exam.')">
+            🔈 TEST ENGLISH AUDIO
         </button>
     </div>
 
     <script>
-        const SLOGAN_DEFAULT = "PRESTASI ITU PENTING, JUJUR YANG PALING UTAMA";
+        const SLOGAN_DEFAULT = "ACHIEVEMENT IS IMPORTANT, HONESTY IS THE PRIORITY";
         let pengumumanAktif = false;
+        let audioCtx;
+
+        function initAudio() {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+
+        // Chime XXI (Teng.. Teng.. Teng.. Ting!)
+        function playChime() {
+            initAudio();
+            const notes = [329.63, 392.00, 523.25, 659.25]; // E4, G4, C5, E5
+            const startTime = audioCtx.currentTime;
+            notes.forEach((freq, i) => {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(freq, startTime + i * 0.5);
+                gain.gain.setValueAtTime(0, startTime + i * 0.5);
+                gain.gain.linearRampToValueAtTime(0.2, startTime + i * 0.5 + 0.1);
+                gain.gain.exponentialRampToValueAtTime(0.0001, startTime + i * 0.5 + 1.2);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(startTime + i * 0.5);
+                osc.stop(startTime + i * 0.5 + 1.5);
+            });
+        }
 
         function berikanSuara(teks) {
             window.speechSynthesis.cancel();
-            const pesan = new SpeechSynthesisUtterance(teks);
-            pesan.lang = 'id-ID';
-            pesan.rate = 0.9; 
-            window.speechSynthesis.speak(pesan);
+            playChime();
+
+            // Jeda 2.5 detik agar Chime selesai sebelum bicara
+            setTimeout(() => {
+                const pesan = new SpeechSynthesisUtterance(teks);
+                const voices = window.speechSynthesis.getVoices();
+                
+                // Mencari suara Perempuan (US/UK) yang jernih
+                const femaleVoice = voices.find(v => 
+                    (v.lang.startsWith('en')) && 
+                    (v.name.toLowerCase().includes('female') || 
+                     v.name.toLowerCase().includes('zira') || 
+                     v.name.toLowerCase().includes('samantha') || 
+                     v.name.toLowerCase().includes('google us english') ||
+                     v.name.toLowerCase().includes('hazel'))
+                );
+
+                if (femaleVoice) {
+                    pesan.voice = femaleVoice;
+                } else {
+                    pesan.lang = 'en-US';
+                }
+
+                pesan.rate = 0.85;  // Kecepatan sedikit melambat agar artikulasi jelas
+                pesan.pitch = 1.0; // Nada normal (Natural)
+                window.speechSynthesis.speak(pesan);
+            }, 2500);
         }
 
         function tampilkanAlert(teks, pakeSuara) {
@@ -165,7 +119,6 @@
             
             if (pakeSuara) berikanSuara(teks);
 
-            // Kembali ke teks semula setelah 60 detik
             setTimeout(() => {
                 pengumumanAktif = false;
                 updateMessageDisplay(); 
@@ -174,14 +127,12 @@
 
         function updateMessageDisplay() {
             if (pengumumanAktif) return;
-
             const now = new Date();
             const h = now.getHours();
             const target = document.getElementById('dynamic-msg');
-
-            // Logika teks saat jam istirahat
+            
             if (h >= 9 && h < 10) {
-                target.textContent = "SESI 1 SELESAI";
+                target.textContent = "SESSION ONE FINISHED";
             } else {
                 target.textContent = SLOGAN_DEFAULT;
             }
@@ -189,35 +140,31 @@
 
         function updateTime() {
             const now = new Date();
-            const h = now.getHours();
-            const m = now.getMinutes();
-            const s = now.getSeconds();
+            const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
             
-            // Update Jam & Tanggal
             document.getElementById('clock').textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-            const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
-            document.getElementById('date').textContent = now.toLocaleDateString('id-ID', options);
+            document.getElementById('date').textContent = now.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
-            // Logika Alert Terjadwal
             if (s === 0) {
-                if (h === 6 && m === 58) tampilkanAlert("ASESMEN AKHIR SEKOLAH SESI 1, AKAN SEGERA DIMULAI!", true);
-                else if (h === 8 && m === 45) tampilkanAlert("SISA WAKTU 15 MENIT LAGI", true);
-                else if (h === 8 && m === 55) tampilkanAlert("SISA WAKTU 5 MENIT! CEK KEMBALI JAWABAN ANDA!", true);
-                else if (h === 9 && m === 0) tampilkanAlert("WAKTU ASESMEN AKHIR SEKOLAH SESI 1, TELAH HABIS!", true);
-                else if (h === 9 && m === 58) tampilkanAlert("ASESMEN AKHIR SEKOLAH SESI 2, AKAN SEGERA DIMULAI!", true);
-                else if (h === 11 && m === 45) tampilkanAlert("SISA WAKTU 15 MENIT LAGI, SEMANGAT!", true);
-                else if (h === 11 && m === 55) tampilkanAlert("SISA WAKTU 5 MENIT! CEK KEMBALI JAWABAN ANDA!", true);
-                else if (h === 12 && m === 0) tampilkanAlert("WAKTU ASESMEN AKHIR SEKOLAH SESI 2, TELAH HABIS!", true);
+                if (h === 6 && m === 57) tampilkanAlert("Your attention please. Session one is about to begin.", true);
+				else if (h === 7 && m === 00) tampilkanAlert("ACHIEVEMENT IS IMPORTANT, HONESTY IS THE PRIORITY", true);
+                else if (h === 8 && m === 45) tampilkanAlert("Attention please. Fifteen minutes remaining for this session.", true);
+                else if (h === 8 && m === 55) tampilkanAlert("Attention please. Five minutes remaining. Please double-check your answers.", true);
+                else if (h === 9 && m === 00) tampilkanAlert("Attention please. Session one has ended.", true);
+                else if (h === 9 && m === 57) tampilkanAlert("Your attention please. Session two is about to begin.", true);
+				else if (h === 10 && m === 00) tampilkanAlert("ACHIEVEMENT IS IMPORTANT, HONESTY IS THE PRIORITY", true);
+                else if (h === 11 && m === 45) tampilkanAlert("Attention please. Fifteen minutes remaining for this session.", true);
+                else if (h === 11 && m === 55) tampilkanAlert("Attention please. Five minutes remaining. Please double-check your answers.", true);
+                else if (h === 12 && m === 0) tampilkanAlert("Attention please. Session two has ended.", true);
             }
-
-            // Pastikan pesan default selalu diperbarui (misal saat masuk jam istirahat)
             if (!pengumumanAktif) updateMessageDisplay();
         }
 
+        // Memastikan daftar suara dimuat
+        window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
+        
         setInterval(updateTime, 1000);
         updateTime();
     </script>
 </body>
 </html>
-
-
