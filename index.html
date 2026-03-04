@@ -31,7 +31,6 @@
             position: relative;
         }
 
-        /* BARIS ATAS (25%) - INSTRUKSI BERKEDIP */
         .row-top {
             flex: 0 0 25%;
             display: flex;
@@ -60,7 +59,6 @@
             50% { opacity: 0.3; transform: scale(0.98); }
         }
 
-        /* BARIS TENGAH (55%) - JAM & TANGGAL */
         .row-middle {
             flex: 0 0 55%;
             display: flex;
@@ -84,7 +82,6 @@
             opacity: 0.9;
         }
 
-        /* BARIS BAWAH (20%) - PESAN TERJADWAL */
         .row-bottom {
             flex: 0 0 20%;
             display: flex;
@@ -100,9 +97,9 @@
             color: #ffffff;
             text-align: center;
             text-shadow: 0 2px 5px rgba(0,0,0,0.5);
+            text-transform: uppercase;
         }
 
-        /* TOMBOL TES SUARA */
         .test-audio-btn {
             position: absolute;
             bottom: 20px;
@@ -114,23 +111,13 @@
             border-radius: 20px;
             cursor: pointer;
             font-size: 0.7rem;
-            font-family: 'Montserrat', sans-serif;
-            transition: all 0.3s;
             z-index: 100;
         }
 
-        .test-audio-btn:hover {
-            background: rgba(255, 255, 255, 0.4);
-            transform: translateY(-2px);
-        }
-
         @media (max-width: 768px) {
-            body { flex-direction: column; }
-            .image-section { height: 25vh; }
-            .clock-section { height: 75vh; }
             #clock { font-size: 4rem; }
             .instruction { font-size: 1rem; }
-            #date { font-size: 1.2rem; }
+            #dynamic-msg { font-size: 1.2rem; }
         }
     </style>
 </head>
@@ -154,31 +141,49 @@
             <div id="dynamic-msg">PRESTASI ITU PENTING, JUJUR YANG PALING UTAMA</div>
         </div>
 
-        <button class="test-audio-btn" onclick="berikanSuara('Sinkronisasi Sistem, berhasil')">
+        <button class="test-audio-btn" onclick="berikanSuara('Tes Audio Berhasil')">
             🔈 TES AUDIO
         </button>
     </div>
 
     <script>
-        // FUNGSI SUARA (Text-to-Speech)
+        const SLOGAN_DEFAULT = "PRESTASI ITU PENTING, JUJUR YANG PALING UTAMA";
+        let pengumumanAktif = false;
+
         function berikanSuara(teks) {
-            // Batalkan suara yang sedang berjalan agar tidak tumpang tindih
             window.speechSynthesis.cancel();
-            
             const pesan = new SpeechSynthesisUtterance(teks);
             pesan.lang = 'id-ID';
             pesan.rate = 0.9; 
-            pesan.pitch = 1;
             window.speechSynthesis.speak(pesan);
         }
 
         function tampilkanAlert(teks, pakeSuara) {
             const target = document.getElementById('dynamic-msg');
             target.textContent = teks;
-            target.style.color = "#ffffff"; 
+            pengumumanAktif = true;
             
-            if (pakeSuara) {
-                berikanSuara(teks);
+            if (pakeSuara) berikanSuara(teks);
+
+            // Kembali ke teks semula setelah 60 detik
+            setTimeout(() => {
+                pengumumanAktif = false;
+                updateMessageDisplay(); 
+            }, 60000);
+        }
+
+        function updateMessageDisplay() {
+            if (pengumumanAktif) return;
+
+            const now = new Date();
+            const h = now.getHours();
+            const target = document.getElementById('dynamic-msg');
+
+            // Logika teks saat jam istirahat
+            if (h >= 9 && h < 10) {
+                target.textContent = "SESI 1 SELESAI. ISTIRAHAT & PERSIAPKAN SESI 2";
+            } else {
+                target.textContent = SLOGAN_DEFAULT;
             }
         }
 
@@ -188,42 +193,29 @@
             const m = now.getMinutes();
             const s = now.getSeconds();
             
-            // Tampilan Jam
-            const timeStr = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-            document.getElementById('clock').textContent = timeStr;
-
-            // Tampilan Tanggal
+            // Update Jam & Tanggal
+            document.getElementById('clock').textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
             const options = { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' };
             document.getElementById('date').textContent = now.toLocaleDateString('id-ID', options);
 
-            // LOGIKA JADWAL
-            // SESI 1
-            if (h === 6 && m === 58 && s === 0) {
-                tampilkanAlert("ASESMEN AKHIR SEKOLAH SESI 1, AKAN SEGERA DIMULAI!", true);
-            } else if (h === 8 && m === 45 && s === 0) {
-                tampilkanAlert("SISA WAKTU 15 MENIT LAGI", true);
-            } else if (h === 8 && m === 55 && s === 0) {
-                tampilkanAlert("SISA WAKTU 5 MENIT! CEK KEMBALI JAWABAN KAMU!", true);
-            } else if (h === 9 && m === 0 && s === 0) {
-                tampilkanAlert("WAKTU ASESMEN AKHIR SEKOLAH SESI 1, TELAH HABIS!", true);
-            } 
-            // SESI 2
-            else if (h === 9 && m === 58 && s === 0) {
-                tampilkanAlert("ASESMEN AKHIR SEKOLAH SESI 2, AKAN SEGERA DIMULAI!", true);
-            } else if (h === 11 && m === 45 && s === 0) {
-                tampilkanAlert("SISA WAKTU 15 MENIT LAGI, SEMANGAT!", true);
-            } else if (h === 11 && m === 55 && s === 0) {
-                tampilkanAlert("SISA WAKTU 5 MENIT! CEK KEMBALI JAWABAN KAMU!", true);
-            } else if (h === 12 && m === 0 && s === 0) {
-                tampilkanAlert("WAKTU ASESMEN AKHIR SEKOLAH SESI 2, TELAH HABIS!", true);
+            // Logika Alert Terjadwal
+            if (s === 0) {
+                if (h === 6 && m === 58) tampilkanAlert("ASESMEN AKHIR SEKOLAH SESI 1, AKAN SEGERA DIMULAI!", true);
+                else if (h === 8 && m === 45) tampilkanAlert("SISA WAKTU 15 MENIT LAGI", true);
+                else if (h === 8 && m === 55) tampilkanAlert("SISA WAKTU 5 MENIT! CEK KEMBALI JAWABAN KAMU!", true);
+                else if (h === 9 && m === 0) tampilkanAlert("WAKTU ASESMEN AKHIR SEKOLAH SESI 1, TELAH HABIS!", true);
+                else if (h === 9 && m === 58) tampilkanAlert("ASESMEN AKHIR SEKOLAH SESI 2, AKAN SEGERA DIMULAI!", true);
+                else if (h === 11 && m === 45) tampilkanAlert("SISA WAKTU 15 MENIT LAGI, SEMANGAT!", true);
+                else if (h === 11 && m === 55) tampilkanAlert("SISA WAKTU 5 MENIT! CEK KEMBALI JAWABAN KAMU!", true);
+                else if (h === 12 && m === 0) tampilkanAlert("WAKTU ASESMEN AKHIR SEKOLAH SESI 2, TELAH HABIS!", true);
             }
+
+            // Pastikan pesan default selalu diperbarui (misal saat masuk jam istirahat)
+            if (!pengumumanAktif) updateMessageDisplay();
         }
 
-        // Jalankan update setiap detik
         setInterval(updateTime, 1000);
         updateTime();
     </script>
 </body>
 </html>
-
-
