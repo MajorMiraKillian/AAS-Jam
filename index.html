@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AAS Clock - Official English Version</title>
+    <title>Jam AAS - Hybrid Language</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { display: flex; height: 100vh; font-family: 'Montserrat', sans-serif; overflow: hidden; background-color: #000; }
-        .image-section { flex: 1; background: url('https://i.postimg.cc/FKmJ09T2/Back-IFP-AAS.jpg') no-repeat center center; background-size: cover; }
+        .image-section { flex: 1; background: url('https://i.postimg.cc/xTc588T0/Back_IFP_AAS.jpg') no-repeat center center; background-size: cover; }
         .clock-section { flex: 1; display: flex; flex-direction: column; background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); color: white; position: relative; }
         
         .row-top { flex: 0 0 25%; display: flex; align-items: center; justify-content: center; padding: 15px; text-align: center; }
@@ -35,25 +35,24 @@
     <div class="clock-section">
         <div class="row-top">
             <div class="instruction">
-                PLEASE ENSURE: NAME, EXAM NUMBER,<br>
-				SUBJECT AND QUESTION TYPE ARE FILLED<br>
-                CORRECTLY AND PERFECTLY!
+                Pastikan<br> Nama, Nomor Ujian, Mata Pelajaran <BR>dan TIPE SOAL untuk diisi (dihitamkan) <BR>dengan BENAR/SEMPURNA!
             </div>
         </div>
         <div class="row-middle">
             <div id="clock">00:00:00</div>
-            <div id="date">Loading Date...</div>
+            <div id="date">Memuat Tanggal...</div>
         </div>
         <div class="row-bottom">
-            <div id="dynamic-msg">ACHIEVEMENT IS IMPORTANT, HONESTY IS THE PRIORITY</div>
+            <div id="dynamic-msg">PRESTASI ITU PENTING, JUJUR YANG PALING UTAMA</div>
         </div>
-        <button class="test-audio-btn" onclick="berikanSuara('The audio system is functioning correctly. Please prepare for your exam.')">
-            🔈 TEST ENGLISH AUDIO
+        <button class="test-audio-btn" onclick="testAudio()">
+            🔈 TES AUDIO
         </button>
     </div>
 
     <script>
-        const SLOGAN_DEFAULT = "ACHIEVEMENT IS IMPORTANT, HONESTY IS THE PRIORITY";
+        const SLOGAN_ID = "PRESTASI ITU PENTING, JUJUR YANG PALING UTAMA";
+        const SLOGAN_EN = "ACHIEVEMENT IS IMPORTANT, HONESTY IS THE PRIORITY";
         let pengumumanAktif = false;
         let audioCtx;
 
@@ -61,10 +60,9 @@
             if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
         }
 
-        // Chime XXI (Teng.. Teng.. Teng.. Ting!)
         function playChime() {
             initAudio();
-            const notes = [329.63, 392.00, 523.25, 659.25]; // E4, G4, C5, E5
+            const notes = [329.63, 392.00, 523.25, 659.25]; 
             const startTime = audioCtx.currentTime;
             notes.forEach((freq, i) => {
                 const osc = audioCtx.createOscillator();
@@ -81,48 +79,38 @@
             });
         }
 
-        function berikanSuara(teks) {
+        function jalankanPengumuman(teksSuara, teksLayar, langCode) {
             window.speechSynthesis.cancel();
+            document.getElementById('dynamic-msg').textContent = teksLayar;
+            pengumumanAktif = true;
             playChime();
 
-            // Jeda 2.5 detik agar Chime selesai sebelum bicara
             setTimeout(() => {
-                const pesan = new SpeechSynthesisUtterance(teks);
+                const pesan = new SpeechSynthesisUtterance(teksSuara);
                 const voices = window.speechSynthesis.getVoices();
                 
-                // Mencari suara Perempuan (US/UK) yang jernih
+                // Cari suara perempuan yang natural
                 const femaleVoice = voices.find(v => 
-                    (v.lang.startsWith('en')) && 
-                    (v.name.toLowerCase().includes('female') || 
-                     v.name.toLowerCase().includes('zira') || 
-                     v.name.toLowerCase().includes('samantha') || 
-                     v.name.toLowerCase().includes('google us english') ||
-                     v.name.toLowerCase().includes('hazel'))
+                    v.lang.includes(langCode) && 
+                    (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('xiaoxiao') || v.name.toLowerCase().includes('natural') || v.name.toLowerCase().includes('gadis'))
                 );
 
-                if (femaleVoice) {
-                    pesan.voice = femaleVoice;
-                } else {
-                    pesan.lang = 'en-US';
-                }
-
-                pesan.rate = 0.85;  // Kecepatan sedikit melambat agar artikulasi jelas
-                pesan.pitch = 1.0; // Nada normal (Natural)
+                pesan.voice = femaleVoice || voices.find(v => v.lang.includes(langCode));
+                pesan.lang = langCode;
+                pesan.rate = 0.85;  
+                pesan.pitch = 1.0; 
                 window.speechSynthesis.speak(pesan);
+
+                setTimeout(() => {
+                    pengumumanAktif = false;
+                    updateMessageDisplay(); 
+                }, 60000);
             }, 2500);
         }
 
-        function tampilkanAlert(teks, pakeSuara) {
-            const target = document.getElementById('dynamic-msg');
-            target.textContent = teks;
-            pengumumanAktif = true;
-            
-            if (pakeSuara) berikanSuara(teks);
-
-            setTimeout(() => {
-                pengumumanAktif = false;
-                updateMessageDisplay(); 
-            }, 60000);
+        function testAudio() {
+            // Test menggunakan suara Indo (Sesi 2 style)
+            jalankanPengumuman("Sistem audio berfungsi dengan baik", "SISTEM AUDIO BERFUNGSI DENGAN BAIK", "id-ID");
         }
 
         function updateMessageDisplay() {
@@ -131,10 +119,13 @@
             const h = now.getHours();
             const target = document.getElementById('dynamic-msg');
             
-            if (h >= 9 && h < 10) {
-                target.textContent = "SESSION ONE FINISHED";
+            // Jika jam 7-9 (Sesi 1), gunakan slogan Inggris
+            if (h >= 7 && h < 9) {
+                target.textContent = SLOGAN_EN;
+            } else if (h >= 9 && h < 10) {
+                target.textContent = "SESI SATU TELAH SELESAI";
             } else {
-                target.textContent = SLOGAN_DEFAULT;
+                target.textContent = SLOGAN_ID;
             }
         }
 
@@ -143,26 +134,37 @@
             const h = now.getHours(), m = now.getMinutes(), s = now.getSeconds();
             
             document.getElementById('clock').textContent = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
-            document.getElementById('date').textContent = now.toLocaleDateString('en-US', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            document.getElementById('date').textContent = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
             if (s === 0) {
-                if (h === 6 && m === 57) tampilkanAlert("Your attention please. Session one is about to begin.", true);
-				else if (h === 7 && m === 00) tampilkanAlert("ACHIEVEMENT IS IMPORTANT, HONESTY IS THE PRIORITY", true);
-                else if (h === 8 && m === 45) tampilkanAlert("Attention please. Fifteen minutes remaining for this session.", true);
-                else if (h === 8 && m === 55) tampilkanAlert("Attention please. Five minutes remaining. Please double-check your answers.", true);
-                else if (h === 9 && m === 00) tampilkanAlert("Attention please. Session one has ended.", true);
-                else if (h === 9 && m === 57) tampilkanAlert("Your attention please. Session two is about to begin.", true);
-				else if (h === 10 && m === 00) tampilkanAlert("ACHIEVEMENT IS IMPORTANT, HONESTY IS THE PRIORITY", true);
-                else if (h === 11 && m === 45) tampilkanAlert("Attention please. Fifteen minutes remaining for this session.", true);
-                else if (h === 11 && m === 55) tampilkanAlert("Attention please. Five minutes remaining. Please double-check your answers.", true);
-                else if (h === 12 && m === 0) tampilkanAlert("Attention please. Session two has ended.", true);
+                // --- SESI 1: Suara Mandarin (zh-CN), Teks Inggris ---
+                if (h === 6 && m === 57) 
+                    jalankanPengumuman("请注意，第一场校终评估即将开始。", "ATTENTION, FINAL SCHOOL ASSESSMENT SESSION 1 IS ABOUT TO BEGIN!", "zh-CN");
+                else if (h === 7 && m === 00) 
+                    jalankanPengumuman("成绩固然重要，诚信才是根本。", "ACHIEVEMENT IS IMPORTANT, HONESTY IS THE PRIORITY", "zh-CN");
+                else if (h === 7 && m === 45) 
+                    jalankanPengumuman("请注意，答题时间还剩十五分钟。", "ATTENTION, YOU HAVE 15 MINUTES REMAINING.", "zh-CN");
+                else if (h === 7 && m === 55) 
+                    jalankanPengumuman("请注意，答题时间还剩五分钟。请检查您的答案。", "ATTENTION, 5 MINUTES LEFT. PLEASE CHECK YOUR ANSWERS.", "zh-CN");
+                else if (h === 9 && m === 00) 
+                    jalankanPengumuman("请注意，第一场校终评估答题时间已到。", "SESSION 1 ASSESSMENT TIME IS OVER.", "zh-CN");
+
+                // --- SESI 2: Suara Indonesia (id-ID), Teks Indonesia ---
+                else if (h === 9 && m === 57) 
+                    jalankanPengumuman("Mohon perhatian, asesmen akhir sekolah sesi dua akan segera dimulai.", "ASESMEN AKHIR SEKOLAH SESI 2 AKAN SEGERA DIMULAI!", "id-ID");
+                else if (h === 10 && m === 00) 
+                    jalankanPengumuman("Prestasi itu penting, jujur yang paling utama.", "PRESTASI ITU PENTING, JUJUR YANG PALING UTAMA", "id-ID");
+                else if (h === 11 && m === 45) 
+                    jalankanPengumuman("Mohon perhatian, waktu mengerjakan tersisa lima belas menit.", "WAKTU MENGERJAKAN TERSISA 15 MENIT.", "id-ID");
+                else if (h === 11 && m === 55) 
+                    jalankanPengumuman("Mohon perhatian, waktu tersisa lima menit. Silakan periksa kembali jawaban Anda.", "WAKTU TERSISA 5 MENIT. PERIKSA KEMBALI JAWABAN ANDA!", "id-ID");
+                else if (h === 12 && m === 00) 
+                    jalankanPengumuman("Mohon perhatian, waktu asesmen akhir sekolah sesi dua telah habis.", "WAKTU ASESMEN AKHIR SEKOLAH SESI 2 TELAH HABIS!", "id-ID");
             }
             if (!pengumumanAktif) updateMessageDisplay();
         }
 
-        // Memastikan daftar suara dimuat
         window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
-        
         setInterval(updateTime, 1000);
         updateTime();
     </script>
