@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Jam AAS - Hybrid Language</title>
+    <title>Jam AAS - Bahasa Indonesia Formal</title>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -51,8 +51,7 @@
     </div>
 
     <script>
-        const SLOGAN_ID = "PRESTASI ITU PENTING, JUJUR YANG PALING UTAMA";
-        const SLOGAN_EN = "ACHIEVEMENT IS IMPORTANT, HONESTY IS THE PRIORITY";
+        const SLOGAN_DEFAULT = "PRESTASI ITU PENTING, JUJUR YANG PALING UTAMA";
         let pengumumanAktif = false;
         let audioCtx;
 
@@ -79,28 +78,29 @@
             });
         }
 
-        function jalankanPengumuman(teksSuara, teksLayar, langCode) {
+        function jalankanPengumuman(teks) {
             window.speechSynthesis.cancel();
-            document.getElementById('dynamic-msg').textContent = teksLayar;
+            document.getElementById('dynamic-msg').textContent = teks;
             pengumumanAktif = true;
             playChime();
 
             setTimeout(() => {
-                const pesan = new SpeechSynthesisUtterance(teksSuara);
+                const pesan = new SpeechSynthesisUtterance(teks);
                 const voices = window.speechSynthesis.getVoices();
                 
-                // Cari suara perempuan yang natural
-                const femaleVoice = voices.find(v => 
-                    v.lang.includes(langCode) && 
-                    (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('xiaoxiao') || v.name.toLowerCase().includes('natural') || v.name.toLowerCase().includes('gadis'))
+                // Prioritas mencari suara perempuan Indonesia (ID) yang jernih
+                const idVoice = voices.find(v => 
+                    (v.lang.includes('id-ID') || v.lang.includes('id_ID')) && 
+                    (v.name.toLowerCase().includes('female') || v.name.toLowerCase().includes('natural') || v.name.toLowerCase().includes('gadis') || v.name.toLowerCase().includes('siti'))
                 );
 
-                pesan.voice = femaleVoice || voices.find(v => v.lang.includes(langCode));
-                pesan.lang = langCode;
-                pesan.rate = 0.85;  
+                pesan.voice = idVoice || voices.find(v => v.lang.includes('id'));
+                pesan.lang = 'id-ID';
+                pesan.rate = 0.9;  // Kecepatan bicara formal
                 pesan.pitch = 1.0; 
                 window.speechSynthesis.speak(pesan);
 
+                // Kembalikan ke slogan setelah 60 detik
                 setTimeout(() => {
                     pengumumanAktif = false;
                     updateMessageDisplay(); 
@@ -109,8 +109,7 @@
         }
 
         function testAudio() {
-            // Test menggunakan suara Indo (Sesi 2 style)
-            jalankanPengumuman("Sistem audio berfungsi dengan baik", "SISTEM AUDIO BERFUNGSI DENGAN BAIK", "id-ID");
+            jalankanPengumuman("sistem audio berfungsi dengan baik");
         }
 
         function updateMessageDisplay() {
@@ -119,13 +118,10 @@
             const h = now.getHours();
             const target = document.getElementById('dynamic-msg');
             
-            // Jika jam 7-9 (Sesi 1), gunakan slogan Inggris
-            if (h >= 7 && h < 9) {
-                target.textContent = SLOGAN_EN;
-            } else if (h >= 9 && h < 10) {
-                target.textContent = "SESI SATU TELAH SELESAI";
+            if (h >= 9 && h < 10) {
+                target.textContent = "ASESMEN SESI SATU TELAH SELESAI";
             } else {
-                target.textContent = SLOGAN_ID;
+                target.textContent = SLOGAN_DEFAULT;
             }
         }
 
@@ -137,37 +133,38 @@
             document.getElementById('date').textContent = now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
 
             if (s === 0) {
-                // --- SESI 1: Suara Mandarin (zh-CN), Teks Inggris ---
+                // Jadwal Sesi 1
                 if (h === 6 && m === 57) 
-                    jalankanPengumuman("请注意，第一场校终评估即将开始。", "ATTENTION, FINAL SCHOOL ASSESSMENT SESSION 1 IS ABOUT TO BEGIN!", "zh-CN");
-                else if (h === 7 && m === 00) 
-                    jalankanPengumuman("成绩固然重要，诚信才是根本。", "ACHIEVEMENT IS IMPORTANT, HONESTY IS THE PRIORITY", "zh-CN");
+                    jalankanPengumuman("Mohon perhatian, asesmen akhir sekolah sesi satu akan segera dimulai.");
+                else if (h === 7 && m === 0) 
+                    jalankanPengumuman("Prestasi itu penting, jujur yang paling utama. Selamat Mengerjakan.");
                 else if (h === 8 && m === 45) 
-                    jalankanPengumuman("请注意，答题时间还剩十五分钟。", "ATTENTION, YOU HAVE 15 MINUTES REMAINING.", "zh-CN");
+                    jalankanPengumuman("Mohon perhatian, waktu mengerjakan tersisa lima belas menit.");
                 else if (h === 8 && m === 55) 
-                    jalankanPengumuman("请注意，答题时间还剩五分钟。请检查您的答案。", "ATTENTION, 5 MINUTES LEFT. PLEASE CHECK YOUR ANSWERS.", "zh-CN");
-                else if (h === 9 && m === 00) 
-                    jalankanPengumuman("请注意，第一场校终评估答题时间已到。", "SESSION 1 ASSESSMENT TIME IS OVER.", "zh-CN");
+                    jalankanPengumuman("Mohon perhatian, waktu mengerjakan tersisa lima menit. Silakan periksa kembali jawaban Anda.");
+                else if (h === 9 && m === 0) 
+                    jalankanPengumuman("Mohon perhatian, waktu asesmen akhir sekolah sesi satu telah habis.");
 
-                // --- SESI 2: Suara Indonesia (id-ID), Teks Indonesia ---
+                // Jadwal Sesi 2
                 else if (h === 9 && m === 57) 
-                    jalankanPengumuman("Mohon perhatian, asesmen akhir sekolah sesi dua akan segera dimulai.", "ASESMEN AKHIR SEKOLAH SESI 2 AKAN SEGERA DIMULAI!", "id-ID");
-                else if (h === 10 && m === 00) 
-                    jalankanPengumuman("Prestasi itu penting, jujur yang paling utama.", "PRESTASI ITU PENTING, JUJUR YANG PALING UTAMA", "id-ID");
+                    jalankanPengumuman("Mohon perhatian, asesmen akhir sekolah sesi dua akan segera dimulai.");
+                else if (h === 10 && m === 0) 
+                    jalankanPengumuman("Prestasi itu penting, jujur yang paling utama. Selamat Mengerjakan.");
                 else if (h === 11 && m === 45) 
-                    jalankanPengumuman("Mohon perhatian, waktu mengerjakan tersisa lima belas menit.", "WAKTU MENGERJAKAN TERSISA 15 MENIT.", "id-ID");
+                    jalankanPengumuman("Mohon perhatian, waktu mengerjakan tersisa lima belas menit.");
                 else if (h === 11 && m === 55) 
-                    jalankanPengumuman("Mohon perhatian, waktu tersisa lima menit. Silakan periksa kembali jawaban Anda.", "WAKTU TERSISA 5 MENIT. PERIKSA KEMBALI JAWABAN ANDA!", "id-ID");
-                else if (h === 12 && m === 00) 
-                    jalankanPengumuman("Mohon perhatian, waktu asesmen akhir sekolah sesi dua telah habis.", "WAKTU ASESMEN AKHIR SEKOLAH SESI 2 TELAH HABIS!", "id-ID");
+                    jalankanPengumuman("Mohon perhatian, waktu mengerjakan tersisa lima menit. Silakan periksa kembali jawaban Anda.");
+                else if (h === 12 && m === 0) 
+                    jalankanPengumuman("Mohon perhatian, waktu asesmen akhir sekolah sesi dua telah habis.");
             }
             if (!pengumumanAktif) updateMessageDisplay();
         }
 
+        // Memastikan suara termuat dengan benar pada beberapa browser
         window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
+        
         setInterval(updateTime, 1000);
         updateTime();
     </script>
 </body>
 </html>
-
